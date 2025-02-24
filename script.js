@@ -19,12 +19,19 @@ const equations = [
 let circles = [];
 
 function resizeCanvas() {
-    const minSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.8);
+    const minSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.4);
     canvas.width = minSize;
     canvas.height = minSize;
+
+    // Center the canvas on the page
+    canvas.style.position = 'absolute';
+    canvas.style.left = `${(window.innerWidth - canvas.width) / 2}px`;
+    canvas.style.top = `${(window.innerHeight - canvas.height) / 2}px`;
+
     positionCircles();
     drawGame();
 }
+
 
 function positionCircles() {
     const cols = 3;
