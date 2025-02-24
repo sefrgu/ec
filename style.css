@@ -1,72 +1,58 @@
-/* body {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    font-family: Arial, sans-serif;
-}
-
-#game-container {
-    position: relative;
-    width: 600px;
-    height: 600px;
-    margin: 0 auto;
-}
-
-canvas {
-    background-color: #222;
-    border: 2px solid #fff;
-    display: block;
-    margin: 0 auto;
-}
-
-#score-container {
-    margin-top: 20px;
-}
-
-.circle {
-    fill: #4a90e2;
-    stroke: #fff;
-    stroke-width: 3;
-}
-
-.line {
-    stroke: #fff;
-    stroke-width: 3;
-} */
-
+/* General styling */
 body {
-    background-color: #333;
+    background-color: #222;
     color: white;
     text-align: center;
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
+/* Title styling */
+h1 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    margin: 20px 0;
+}
+
+/* Game container */
 #game-container {
-    position: relative;
-    width: 600px;
-    height: 600px;
-    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100vw;
+    height: auto;
 }
 
+/* Responsive Canvas */
 canvas {
-    background-color: #222;
+    width: 90vw;
+    height: auto;
+    max-width: 600px;
+    max-height: 600px;
+    touch-action: none;
+    background-color: #111;
     border: 2px solid #fff;
-    display: block;
-    margin: 0 auto;
+    border-radius: 10px;
 }
 
+/* Score styling */
 #score-container {
-    margin-top: 20px;
+    font-size: 1.5rem;
+    margin: 20px 0;
+    color: #4a90e2;
 }
 
+/* Circle styles */
 .circle {
     fill: #4a90e2;
     stroke: #fff;
     stroke-width: 3;
 }
 
+/* Line styles */
 .line {
-    stroke: #4a90e2; /* Match the circle color */
-    stroke-width: 8; /* Thicker lines */
-    stroke-linecap: round; /* Smooth rounded line ends */
+    stroke: #4a90e2;
+    stroke-width: 8;
+    stroke-linecap: round;
 }
