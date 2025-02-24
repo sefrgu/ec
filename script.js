@@ -6,11 +6,9 @@ const scoreElement = document.getElementById('score');
 
 let currentLevel = 0;
 let currentPath = [];
-let hoveredCircle = null;
 let isDragging = false;
 
 const circleRadius = 50;
-const margin = 25;
 const equations = [
     { numbers: [100, '+', 200, '-', 10, '+', 10, '=', 300], solution: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
     { numbers: [10, '+', '-', 5, 20, 15, '+', '=', 10], solution: [0, 1, 3, 2, 4, 6, 5, 7, 8] },
@@ -20,9 +18,9 @@ const equations = [
 let circles = [];
 
 function resizeCanvas() {
-    const minSize = Math.min(window.innerWidth * 1.2, window.innerHeight * 0.7);
-    canvas.width = minSize - margin * 2;
-    canvas.height = minSize - margin * 2;
+    const minSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.8);
+    canvas.width = minSize;
+    canvas.height = minSize;
     canvas.style.margin = 'auto';
     canvas.style.display = 'block';
     positionCircles();
@@ -32,14 +30,15 @@ function resizeCanvas() {
 function positionCircles() {
     const cols = 3;
     const rows = 3;
-    const gridSize = Math.min(canvas.width, canvas.height) / (cols + 1);
+    const gridSizeX = canvas.width / (cols + 1);
+    const gridSizeY = canvas.height / (rows + 1);
     
     circles = [];
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
             circles.push({
-                x: (col + 1) * gridSize,
-                y: (row + 1) * gridSize
+                x: (col + 1) * gridSizeX,
+                y: (row + 1) * gridSizeY
             });
         }
     }
@@ -84,7 +83,7 @@ function drawGame() {
         ctx.lineWidth = 2;
         ctx.stroke();
         ctx.fillStyle = '#fff';
-        ctx.font = '18px Arial';
+        ctx.font = `${Math.max(canvas.width * 0.025, 14)}px Arial`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(equations[currentLevel].numbers[index], circle.x, circle.y);
@@ -100,7 +99,7 @@ function getCircleIndex(x, y) {
     return null;
 }
 
-canvas.addEventListener('mousedown', (e) => { isDragging = true; currentPath = []; });
+canvas.addEventListener('mousedown', () => { isDragging = true; currentPath = []; });
 canvas.addEventListener('mouseup', () => { isDragging = false; checkSolution(); });
 canvas.addEventListener('mouseleave', () => { isDragging = false; });
 
