@@ -8,12 +8,12 @@ let currentLevel = 0;
 let currentPath = [];
 let isDragging = false;
 
-const circleRadius = 40; // Reduced radius for better spacing
-const spacing = 20; // Minimum spacing between circles
+const circleRadius = 40;
+const spacing = 20;
 const equations = [
-    { numbers: [100, '+', 200, '-', 10, '+', 10, '=', 300], solution: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
-    { numbers: [10, '+', '-', 5, 20, 15, '+', '=', 10], solution: [0, 1, 3, 2, 4, 6, 5, 7, 8] },
-    { numbers: [100, '+', 100, '-', 10, '+', 10, '=', 200], solution: [0, 1, 2, 3, 4, 5, 6, 7, 8] }
+    { numbers: [100, '+', 200, '-', 10, '+', 10, '=', 300], solutions: [[0, 1, 2, 3, 4, 5, 6, 7, 8], [0, 1, 2, 5, 4, 3, 6, 7, 8]] },
+    { numbers: [10, '+', '-', 5, 20, 15, '+', '=', 10], solutions: [[0, 1, 3, 2, 4, 6, 5, 7, 8], [0, 1, 5, 2, 4, 6, 3, 7, 8]] },
+    { numbers: [1, 'x', 3, '+', 2, 5, '/', '=', 1], solutions: [[0, 1, 4, 3, 2, 6, 5, 7, 8], [0, 1, 2, 3, 4, 6, 5, 7, 8]] }
 ];
 
 let circles = [];
@@ -23,7 +23,6 @@ function resizeCanvas() {
     canvas.width = minSize;
     canvas.height = minSize;
 
-    // Center the canvas on the page
     canvas.style.position = 'absolute';
     canvas.style.left = `${(window.innerWidth - canvas.width) / 2}px`;
     canvas.style.top = `${(window.innerHeight - canvas.height) / 2}px`;
@@ -32,12 +31,11 @@ function resizeCanvas() {
     drawGame();
 }
 
-
 function positionCircles() {
     const cols = 3;
     const rows = 3;
     const gridSize = (canvas.width - spacing * (cols - 1)) / cols;
-    
+
     circles = [];
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -63,7 +61,6 @@ function getEdgePoint(from, to) {
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw lines
     ctx.beginPath();
     if (currentPath.length > 1) {
         for (let i = 1; i < currentPath.length; i++) {
@@ -80,7 +77,6 @@ function drawGame() {
         ctx.stroke();
     }
 
-    // Draw circles
     circles.forEach((circle, index) => {
         ctx.beginPath();
         ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
@@ -142,7 +138,12 @@ canvas.addEventListener('touchmove', (e) => {
 canvas.addEventListener('touchend', () => { isDragging = false; checkSolution(); });
 
 function checkSolution() {
-    if (JSON.stringify(currentPath) === JSON.stringify(equations[currentLevel].solution)) {
+    const validSolutions = equations[currentLevel].solutions;
+    
+    // Check if currentPath matches any solution
+    const isCorrect = validSolutions.some(solution => JSON.stringify(currentPath) === JSON.stringify(solution));
+
+    if (isCorrect) {
         score++;
         scoreElement.textContent = score;
         alert('Correct! Moving to next level.');
