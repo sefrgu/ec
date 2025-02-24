@@ -1,4 +1,4 @@
-const canvas = document.getElementById('gameCanvas'); 
+const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 let score = 0;
@@ -8,8 +8,8 @@ let currentLevel = 0;
 let currentPath = [];
 let isDragging = false;
 
-const circleRadius = 50;
-const margin = 25;
+const circleRadius = 40; // Reduced radius for better spacing
+const spacing = 20; // Minimum spacing between circles
 const equations = [
     { numbers: [100, '+', 200, '-', 10, '+', 10, '=', 300], solution: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
     { numbers: [10, '+', '-', 5, 20, 15, '+', '=', 10], solution: [0, 1, 3, 2, 4, 6, 5, 7, 8] },
@@ -29,27 +29,15 @@ function resizeCanvas() {
 function positionCircles() {
     const cols = 3;
     const rows = 3;
-    const gridSize = Math.min(canvas.width, canvas.height) / (cols + 1);
+    const gridSize = (canvas.width - spacing * (cols - 1)) / cols;
     
     circles = [];
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-            let newCircle = {
-                x: (col + 1) * gridSize,
-                y: (row + 1) * gridSize
-            };
-            
-            let overlap = circles.some(circle => 
-                Math.hypot(circle.x - newCircle.x, circle.y - newCircle.y) < circleRadius * 2 + margin
-            );
-            
-            if (!overlap) {
-                circles.push(newCircle);
-            } else {
-                newCircle.x += margin;
-                newCircle.y += margin;
-                circles.push(newCircle);
-            }
+            circles.push({
+                x: col * (gridSize + spacing) + gridSize / 2,
+                y: row * (gridSize + spacing) + gridSize / 2
+            });
         }
     }
 }
@@ -68,6 +56,7 @@ function getEdgePoint(from, to) {
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw lines
     ctx.beginPath();
     if (currentPath.length > 1) {
         for (let i = 1; i < currentPath.length; i++) {
@@ -79,11 +68,12 @@ function drawGame() {
             ctx.lineTo(end.x, end.y);
         }
         ctx.strokeStyle = '#4a90e2';
-        ctx.lineWidth = 10;
+        ctx.lineWidth = 8;
         ctx.lineCap = 'round';
         ctx.stroke();
     }
 
+    // Draw circles
     circles.forEach((circle, index) => {
         ctx.beginPath();
         ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
@@ -109,10 +99,10 @@ function getCircleIndex(x, y) {
     return null;
 }
 
+// Mouse events
 canvas.addEventListener('mousedown', () => { isDragging = true; currentPath = []; });
 canvas.addEventListener('mouseup', () => { isDragging = false; checkSolution(); });
 canvas.addEventListener('mouseleave', () => { isDragging = false; });
-
 canvas.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     const rect = canvas.getBoundingClientRect();
@@ -123,6 +113,7 @@ canvas.addEventListener('mousemove', (e) => {
     }
 });
 
+// Touch events
 canvas.addEventListener('touchstart', (e) => { 
     isDragging = true; 
     currentPath = []; 
