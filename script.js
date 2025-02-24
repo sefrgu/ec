@@ -7,6 +7,7 @@ const scoreElement = document.getElementById('score');
 let currentLevel = 0;
 let currentPath = [];
 let hoveredCircle = null;
+let isDragging = false;
 
 const circleRadius = 50;
 const margin = 25;
@@ -74,23 +75,10 @@ function drawGame() {
         ctx.stroke();
     }
 
-    if (hoveredCircle !== null && currentPath.length > 0 && !currentPath.includes(hoveredCircle)) {
-        let lastCircle = circles[currentPath[currentPath.length - 1]];
-        let hoverCircle = circles[hoveredCircle];
-        let start = getEdgePoint(lastCircle, hoverCircle);
-        let end = getEdgePoint(hoverCircle, lastCircle);
-        ctx.beginPath();
-        ctx.moveTo(start.x, start.y);
-        ctx.lineTo(end.x, end.y);
-        ctx.strokeStyle = 'rgba(74, 144, 226, 0.5)';
-        ctx.lineWidth = 10;
-        ctx.stroke();
-    }
-
     circles.forEach((circle, index) => {
         ctx.beginPath();
         ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = currentPath.includes(index) ? '#357ABD' : hoveredCircle === index ? '#5A9CE3' : '#4a90e2';
+        ctx.fillStyle = currentPath.includes(index) ? '#357ABD' : '#4a90e2';
         ctx.fill();
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 2;
@@ -103,29 +91,48 @@ function drawGame() {
     });
 }
 
-canvas.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mousePos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    let newHoveredCircle = null;
+function getCircleIndex(x, y) {
     for (let i = 0; i < circles.length; i++) {
-        if (Math.hypot(circles[i].x - mousePos.x, circles[i].y - mousePos.y) < circleRadius) {
-            newHoveredCircle = i;
-            break;
+        if (Math.hypot(circles[i].x - x, circles[i].y - y) < circleRadius) {
+            return i;
         }
     }
-    if (newHoveredCircle !== hoveredCircle) {
-        hoveredCircle = newHoveredCircle;
-        requestAnimationFrame(drawGame);
+    return null;
+}
+
+canvas.addEventListener('mousedown', (e) => { isDragging = true; currentPath = []; });
+canvas.addEventListener('mouseup', () => { isDragging = false; checkSolution(); });
+canvas.addEventListener('mouseleave', () => { isDragging = false; });
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const rect = canvas.getBoundingClientRect();
+    let index = getCircleIndex(e.clientX - rect.left, e.clientY - rect.top);
+    if (index !== null && !currentPath.includes(index)) {
+        currentPath.push(index);
+        drawGame();
     }
 });
 
-canvas.addEventListener('click', () => {
-    if (hoveredCircle !== null && !currentPath.includes(hoveredCircle)) {
-        currentPath.push(hoveredCircle);
-        drawGame();
-        if (currentPath.length === equations[currentLevel].solution.length) checkSolution();
-    }
+canvas.addEventListener('touchstart', (e) => { 
+    isDragging = true; 
+    currentPath = []; 
+    e.preventDefault();
 });
+
+canvas.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    let index = getCircleIndex(touch.clientX - rect.left, touch.clientY - rect.top);
+    if (index !== null && !currentPath.includes(index)) {
+        currentPath.push(index);
+        drawGame();
+    }
+    e.preventDefault();
+});
+
+canvas.addEventListener('touchend', () => { isDragging = false; checkSolution(); });
 
 function checkSolution() {
     if (JSON.stringify(currentPath) === JSON.stringify(equations[currentLevel].solution)) {
