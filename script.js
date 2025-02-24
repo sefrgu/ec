@@ -6,7 +6,6 @@ const scoreElement = document.getElementById('score');
 
 let currentLevel = 0;
 let currentPath = [];
-let hoveredCircle = null;
 let isDragging = false;
 
 const circleRadius = 50;
@@ -20,11 +19,9 @@ const equations = [
 let circles = [];
 
 function resizeCanvas() {
-    const minSize = Math.min(window.innerWidth * 1.2, window.innerHeight * 0.7);
-    canvas.width = minSize - margin * 2;
-    canvas.height = minSize - margin * 2;
-    canvas.style.margin = 'auto';
-    canvas.style.display = 'block';
+    const minSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.8);
+    canvas.width = minSize;
+    canvas.height = minSize;
     positionCircles();
     drawGame();
 }
@@ -33,7 +30,7 @@ function positionCircles() {
     const cols = 3;
     const rows = 3;
     const gridSize = Math.min(canvas.width, canvas.height) / (cols + 1);
-    
+
     circles = [];
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -59,6 +56,7 @@ function getEdgePoint(from, to) {
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw lines
     ctx.beginPath();
     if (currentPath.length > 1) {
         for (let i = 1; i < currentPath.length; i++) {
@@ -75,6 +73,7 @@ function drawGame() {
         ctx.stroke();
     }
 
+    // Draw circles
     circles.forEach((circle, index) => {
         ctx.beginPath();
         ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
@@ -100,7 +99,8 @@ function getCircleIndex(x, y) {
     return null;
 }
 
-canvas.addEventListener('mousedown', (e) => { isDragging = true; currentPath = []; });
+// Mouse events
+canvas.addEventListener('mousedown', () => { isDragging = true; currentPath = []; });
 canvas.addEventListener('mouseup', () => { isDragging = false; checkSolution(); });
 canvas.addEventListener('mouseleave', () => { isDragging = false; });
 
@@ -114,6 +114,7 @@ canvas.addEventListener('mousemove', (e) => {
     }
 });
 
+// Touch events
 canvas.addEventListener('touchstart', (e) => { 
     isDragging = true; 
     currentPath = []; 
@@ -140,9 +141,7 @@ function checkSolution() {
         scoreElement.textContent = score;
         alert('Correct! Moving to next level.');
         currentLevel = (currentLevel + 1) % equations.length;
-    } else {
-        alert('Incorrect. Try again.');
-    }
+    } 
     currentPath = [];
     drawGame();
 }
