@@ -140,7 +140,9 @@ function checkSolution() {
         scoreElement.textContent = score;
         alert('Correct! Moving to next level.');
         currentLevel = (currentLevel + 1) % equations.length;
-    } 
+    } else {
+        alert('Incorrect. Try again.');
+    }
     currentPath = [];
     drawGame();
 }
