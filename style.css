@@ -1,0 +1,72 @@
+/* body {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+#game-container {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    margin: 0 auto;
+}
+
+canvas {
+    background-color: #222;
+    border: 2px solid #fff;
+    display: block;
+    margin: 0 auto;
+}
+
+#score-container {
+    margin-top: 20px;
+}
+
+.circle {
+    fill: #4a90e2;
+    stroke: #fff;
+    stroke-width: 3;
+}
+
+.line {
+    stroke: #fff;
+    stroke-width: 3;
+} */
+
+body {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+#game-container {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    margin: 0 auto;
+}
+
+canvas {
+    background-color: #222;
+    border: 2px solid #fff;
+    display: block;
+    margin: 0 auto;
+}
+
+#score-container {
+    margin-top: 20px;
+}
+
+.circle {
+    fill: #4a90e2;
+    stroke: #fff;
+    stroke-width: 3;
+}
+
+.line {
+    stroke: #4a90e2; /* Match the circle color */
+    stroke-width: 8; /* Thicker lines */
+    stroke-linecap: round; /* Smooth rounded line ends */
+}
