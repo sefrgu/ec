@@ -1,17 +1,33 @@
 /* General styling */
 body {
-    background-color: #222;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
     color: white;
     text-align: center;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Home Screen */
+#home-screen {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    max-width: 400px;
+    width: 90%;
 }
 
 /* Title styling */
 h1 {
     font-size: clamp(1.5rem, 4vw, 2.5rem);
     margin: 20px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Game container */
@@ -41,6 +57,31 @@ canvas {
     font-size: 1.5rem;
     margin: 20px 0;
     color: #4a90e2;
+}
+
+/* Buttons */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+button {
+    background: linear-gradient(135deg, #ff8c00, #ff5722);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background: linear-gradient(135deg, #ff5722, #e64a19);
+    transform: scale(1.05);
 }
 
 /* Circle styles */
