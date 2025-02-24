@@ -2,18 +2,193 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Game</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        /* Home Screen */
+        #home-screen {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        /* Title */
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Buttons */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff8c00, #ff5722);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #ff5722, #e64a19);
+            transform: scale(1.05);
+        }
+
+        /* Game Screen */
+        #game-screen {
+            display: none;
+            text-align: center;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Back Button */
+        #back-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s;
+        }
+
+        #back-button:hover {
+            transform: scale(1.2);
+        }
+
+        /* Mode Title at the Top */
+        #game-mode-title {
+            font-size: 24px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+        }
+
+        /* Score at the Top Below Title */
+        #score-container {
+            font-size: 20px;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Game Area */
+        #game-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Equations Connect: A Mathematical Game</h1>
-    <div id="game-container">
-        <canvas id="gameCanvas"></canvas>
+    <div id="home-screen">
+        <h1>Equations Connect: A Mathematical Game</h1>
+        <div class="button-container">
+            <button id="easy-btn">Easy</button>
+            <button id="medium-btn">Medium</button>
+        </div>
     </div>
-    <div id="score-container">
-        <p>Score: <span id="score">0</span></p>
+    
+    <div id="game-screen">
+        <button id="back-button">&#8592;</button>
+        <h1 id="game-mode-title">Easy Mode</h1>
+        <div id="score-container">
+            <p>Score: <span id="score">0</span></p>
+        </div>
+        <div id="game-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
     </div>
-    <script src="script.js"></script>
+    
+    <script>
+        const homeScreen = document.getElementById('home-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const gameTitle = document.getElementById('game-mode-title');
+        const easyBtn = document.getElementById('easy-btn');
+        const mediumBtn = document.getElementById('medium-btn');
+        const backButton = document.getElementById('back-button');
+        let currentScript = null;
+
+        function loadScript(scriptPath) {
+            removeCurrentScript(); // Ensure old script is removed first
+
+            currentScript = document.createElement('script');
+            currentScript.src = scriptPath + "?v=" + new Date().getTime(); // Prevent caching issues
+            currentScript.onload = () => console.log(`${scriptPath} loaded`);
+            document.body.appendChild(currentScript);
+        }
+
+        function removeCurrentScript() {
+            if (currentScript) {
+                currentScript.remove();
+                currentScript = null;
+            }
+
+            // **Hard Reset** by reloading the page state
+            window.location.hash = ""; // Remove any history state
+            window.history.replaceState(null, null, window.location.pathname);
+        }
+
+        easyBtn.addEventListener('click', () => {
+            removeCurrentScript();
+            gameTitle.textContent = "Easy Mode";
+            homeScreen.style.display = "none";
+            gameScreen.style.display = "block";
+            loadScript("script.js");
+        });
+
+        mediumBtn.addEventListener('click', () => {
+            removeCurrentScript();
+            gameTitle.textContent = "Medium Mode";
+            homeScreen.style.display = "none";
+            gameScreen.style.display = "block";
+            loadScript("script2.js");
+        });
+
+        backButton.addEventListener('click', () => {
+            window.location.reload();
+            gameScreen.style.display = "none";
+            homeScreen.style.display = "block";
+        });
+    </script>
 </body>
 </html>
