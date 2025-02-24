@@ -1,4 +1,4 @@
-const canvas = document.getElementById('gameCanvas');
+const canvas = document.getElementById('gameCanvas'); 
 const ctx = canvas.getContext('2d');
 
 let score = 0;
@@ -10,6 +10,7 @@ let isDragging = false;
 
 const circleRadius = 50;
 const margin = 25;
+const minDistance = circleRadius * 2 + margin;
 const equations = [
     { numbers: [100, '+', 200, '-', 10, '+', 10, '=', 300], solution: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
     { numbers: [10, '+', '-', 5, 20, 15, '+', '=', 10], solution: [0, 1, 3, 2, 4, 6, 5, 7, 8] },
@@ -30,16 +31,26 @@ function positionCircles() {
     const cols = 3;
     const rows = 3;
     const gridSize = Math.min(canvas.width, canvas.height) / (cols + 1);
-
+    
     circles = [];
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-            circles.push({
-                x: (col + 1) * gridSize,
-                y: (row + 1) * gridSize
-            });
+            let newCircle;
+            let attempts = 0;
+            do {
+                newCircle = {
+                    x: (col + 1) * gridSize + (Math.random() * margin - margin / 2),
+                    y: (row + 1) * gridSize + (Math.random() * margin - margin / 2)
+                };
+                attempts++;
+            } while (isOverlapping(newCircle) && attempts < 100);
+            circles.push(newCircle);
         }
     }
+}
+
+function isOverlapping(newCircle) {
+    return circles.some(circle => Math.hypot(circle.x - newCircle.x, circle.y - newCircle.y) < minDistance);
 }
 
 function getEdgePoint(from, to) {
