@@ -17,7 +17,7 @@ const equations = [
 let circles = [];
 
 function resizeCanvas() {
-    const minSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.5);
+    const minSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.6);
     canvas.width = minSize;
     canvas.height = minSize;
 
